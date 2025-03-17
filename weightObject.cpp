@@ -1,9 +1,8 @@
 #include "weightObject.h"
 #include "HX711.h"
 
-// Initialize Load Cell HX711 (DT = pin 3, SCK = pin 2)
-#define DT_PIN 5
-#define SCK_PIN 4
+#define DT_PIN 23
+#define SCK_PIN 22
 
 float calibration_factor = -7050;  
 
@@ -17,7 +16,7 @@ void initWeight() {
 }
 
 float getWeightValue() {
-  float weight = scale.get_units(5); // Read weight in grams
+  float weight = scale.get_units(10); // Read weight in grams
   Serial.print("Weight: ");
   Serial.print(weight);
   Serial.println(" g");
