@@ -20,43 +20,40 @@ void initDisplay() {
 }
 
 void showDisplay(const char* time, float size) {
-  // Update counters based on size
-  String type = ""; // Default type
-  if (size >= 9.35 && size < 10) {
+  String type = "";
+  if (size >= 8.40 && size < 9) {
     Serial.println("SMALL");
     type = "SMALL";
     cntS++;
-  } else if (size >= 10 && size <= 12.00) {
+  } else if (size >= 9.35 && size < 10) {
     Serial.println("MEDIUM");
     type = "MEDIUM";
     cntM++;
-  } else if(size >= 12  && size < 14.00) {
+  } else if(size >= 10  && size < 11.00) {
     Serial.println("LARGE");
     type = "LARGE";
     cntL++;
   }
 
-  // Update display without flickering
   lcd.setCursor(3, 0);
-  lcd.print("Smart Poultry    ");  // Spaces to clear previous text
-
+  lcd.print("Smart Poultry    ");
   lcd.setCursor(3, 1);
   lcd.print("Time: ");
   lcd.print(time);
-  lcd.print("    ");  // Spaces to overwrite old time
+  lcd.print("    ");
 
   lcd.setCursor(1, 2);
   lcd.print("EGG TYPE: ");
   lcd.print(type);
-  lcd.print("      ");  // Extra spaces to clear previous long text
+  lcd.print("      ");
 
   lcd.setCursor(0, 3);
-  lcd.print("CNT: S:");
+  lcd.print("CNT: SM:");
   lcd.print(cntS);
-  lcd.print(" |M:");
+  lcd.print(" MD:");
   lcd.print(cntM);
-  lcd.print(" |L:");
+  lcd.print(" LG:");
   lcd.print(cntL);
-  lcd.print("   ");  // Extra spaces to clear old numbers
+  lcd.print("   ");
 }
 
