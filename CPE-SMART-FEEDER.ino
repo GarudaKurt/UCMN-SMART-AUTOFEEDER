@@ -3,6 +3,11 @@
 #include "weightObject.h"
 #include "timer.h"
 #include "conveyorControl.h"
+#include "myservo.h"
+
+unsigned long prev = 0;
+unsigned long prev1 = 0;
+
 
 void setup() {
   Serial.begin(115200);
@@ -10,6 +15,7 @@ void setup() {
   initWeight();
   initTimer();
   initConveyor();
+  initServo();
   delay(2000);
 }
 
@@ -17,4 +23,9 @@ void loop() {
   float weight = getWeightValue();
   const char *time = getCurrentTime();
   showDisplay(time, weight);
+  
+  //activateSUPPLY();  // Check timers
+
+  //Serial.println("I will run this!");
+  //runConveyor();   // Run conveyor only when activated
 }
