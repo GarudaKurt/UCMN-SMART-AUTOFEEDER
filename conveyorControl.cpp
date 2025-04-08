@@ -2,10 +2,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define ENA 2   // Speed control for Motor A
+// #define ENA 2   // Speed control for Motor A
+// #define IN1 3   // Motor A Direction
+// #define IN2 4
+
 #define ENB 7   // Speed control for Motor B
-#define IN1 3   // Motor A Direction
-#define IN2 4
 #define IN3 5   // Motor B Direction
 #define IN4 6
 
@@ -22,10 +23,10 @@ int speedB = 50;
 
 void initConveyor() {
   Wire.begin();
-  pinMode(ENA, OUTPUT);
+  //pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
+  // pinMode(IN1, OUTPUT);
+  // pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
 }
@@ -51,7 +52,7 @@ void conveyorReverse_Manure() {
     analogWrite(ENB, speedB);
   }
 }
-
+/*
 // Move forward every 1 second (for collection)
 void conveyorForward_Collect() {
   if (millis() - prevTime3 >= 1000) {
@@ -72,6 +73,7 @@ void conveyorStop() {
     conveyorRunning = false;  // Reset state
   }
 }
+*/
 
 // Master function to control the conveyor
 void runConveyor() {
@@ -84,6 +86,6 @@ void runConveyor() {
   // Run conveyor functions
   conveyorForward_Manure();
   conveyorReverse_Manure();
-  conveyorForward_Collect();
-  conveyorStop();
+  //conveyorForward_Collect();
+ // conveyorStop();
 }
