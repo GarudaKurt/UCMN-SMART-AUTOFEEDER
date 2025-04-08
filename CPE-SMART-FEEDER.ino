@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "conveyorControl.h"
 #include "myservo.h"
+#include "controlMotor.h"
 
 unsigned long prev = 0;
 unsigned long prev1 = 0;
@@ -16,6 +17,7 @@ void setup() {
   initTimer();
   initConveyor();
   initServo();
+  initStepperConveyor();
   delay(2000);
 }
 
