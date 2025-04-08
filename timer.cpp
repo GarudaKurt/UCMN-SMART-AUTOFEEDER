@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "conveyorControl.h"
+#include "controlMotor.h"
 #include "myservo.h"
 #include <RTClib.h>
 #include <Arduino.h>
@@ -96,14 +97,16 @@ const char* getCurrentTime() {
   // Conveyor Control
   if (!isConveyorRunning && currentMinutes % 2 == 0 && currentMinutes != lastExecutedMinute) {
     Serial.println("Run conveyor!");
-    runConveyor();
+    //runConveyor();
+    runStepperConveyor();
     isConveyorRunning = true;
     conveyorStartTime = currentMillis;
     lastExecutedMinute = currentMinutes;
   }
   if (isConveyorRunning && (currentMillis - conveyorStartTime >= conveyorRunDuration)) {
     Serial.println("Stopping conveyor.");
-    conveyorStop();
+    //conveyorStop();
+    conveyorStop_Stepper();
     isConveyorRunning = false;
   }
 
