@@ -56,11 +56,11 @@ void conveyorForward_Collect_Stepper() {
   stepper.runSpeed();
 }
 
+
 void conveyorStop_Stepper() {
   if (millis() - stepperStartTime >= 40000) {
     Serial.println("Stepper Stopped");
-    stepper.stop();
-    //digitalWrite(ENABLE_PIN, HIGH); // Disable motor driver
+    stepper.setSpeed(0);  // Stop the motor
     stepperRunning = false;
   }
 }
