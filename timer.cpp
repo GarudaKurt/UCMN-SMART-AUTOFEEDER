@@ -95,12 +95,9 @@ const char* getCurrentTime() {
   }
 
   // Conveyor Control
-  if (!isConveyorRunning && currentMinutes % 2 == 0 && currentMinutes != lastExecutedMinute) {
+  if (currentMinutes % 2 == 0 && currentMinutes != lastExecutedMinute) {
     Serial.println("Run conveyor!");
-    //runConveyor();
-    runStepperConveyor();
-    isConveyorRunning = true;
-    conveyorStartTime = currentMillis;
+    runStepperConveyor();  // This will manage the motor timing
     lastExecutedMinute = currentMinutes;
   }
   if (isConveyorRunning && (currentMillis - conveyorStartTime >= conveyorRunDuration)) {
