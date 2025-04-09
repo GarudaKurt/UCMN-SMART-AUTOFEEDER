@@ -57,24 +57,30 @@ void conveyorForward_Collect_Stepper() {
 }
 
 
+void runStepperConveyor() {
+  // Start stepper conveyor if not already running
+  if (!stepperRunning) {
+    stepperRunning = true;
+    stepperStartTime = millis();  // Start timer when the conveyor is activated
+    Serial.println("Starting Stepper Conveyor...");
+    // digitalWrite(ENABLE_PIN, LOW);  // Enable driver (uncomment if needed)
+  }
+
+  conveyorForward_Collect_Stepper();
+
+  if (millis() - stepperStartTime >= conveyorRunDuration) {
+    // Stop after 40 seconds
+    conveyorStop_Stepper();
+  }
+}
+
 void conveyorStop_Stepper() {
-  if (millis() - stepperStartTime >= 40000) {
+  if (millis() - stepperStartTime >= conveyorRunDuration) {
     Serial.println("Stepper Stopped");
     stepper.setSpeed(0);  // Stop the motor
     stepperRunning = false;
   }
 }
 
-void runStepperConveyor() {
-  if (!stepperRunning) {
-    stepperRunning = true;
-    stepperStartTime = millis();
-    Serial.println("Starting Stepper Conveyor...");
-   // digitalWrite(ENABLE_PIN, LOW); // Enable driver
-  }
-
-  conveyorForward_Collect_Stepper();
-  conveyorStop_Stepper();
-}
 
 
