@@ -23,50 +23,62 @@ void initDisplay() {
 }
 
 void showDisplay(const char* time, float size) {
-  static int step = 0; // Track servo sequence steps
-  static unsigned long actionTime = 0; // Store last action timestamp
-  static unsigned long prevTime = 0;
-  String type = ""; 
-  if(millis() - prevTime > 2000) {
-    prevTime = millis();
+  static int step = 0;
+  static unsigned long stateStart = 0;
+  static String type = "";
+  static bool newEgg = false;
+
+  static unsigned long prevClassify = 0;
+  if (millis() - prevClassify > 2000 && step == 0) {
+    prevClassify = millis();
     if (size >= 8.40 && size < 9) {
-      Serial.println("SMALL");
       type = "SMALL";
-      sorted = true;
       cntS++;
+      newEgg = true;
     } else if (size >= 9.35 && size < 10) {
-      Serial.println("MEDIUM");
       type = "MEDIUM";
-      sorted = true;
       cntM++;
+      newEgg = true;
     } else if (size >= 10  && size < 11.00) {
-      Serial.println("LARGE");
       type = "LARGE";
-      sorted = true;
       cntL++;
+      newEgg = true;
     }
 
-  }
-  
-  if (sorted) {    
-    servoStop();
-    delay(1000);
-    resetStop();
-    if(type == "SMALL") {
-      servoSorting(90);
-    } else if(type == "MEDIUM") {
-      servoSorting(45);
-    } else if(type ==" LARGE") {
-      servoSorting(130);
+    if (newEgg) {
+      stateStart = millis();
+      step = 1;
+      servoStop();
     }
-    servoDischarge();
-    delay(1000);
-    sorted = false;
-    resetSorting();
-    resetDischarge();
   }
 
-  // Display update
+  switch (step) {
+    case 1:
+      if (millis() - stateStart >= 2000) {
+        resetStop();
+        if (type == "SMALL") {
+          servoSorting(90);
+        } else if (type == "MEDIUM") {
+          servoSorting(45);
+        } else if (type == "LARGE") {
+          servoSorting(130);
+        }
+        servoDischarge();
+        stateStart = millis();
+        step = 2;
+      }
+      break;
+    case 2:
+      if (millis() - stateStart >= 3000) {
+        resetSorting();
+        resetDischarge();
+        step = 0;
+        newEgg = false;
+        type = "";
+      }
+      break;
+  }
+
   lcd.setCursor(3, 0);
   lcd.print("Smart Poultry    "); 
 
