@@ -5,10 +5,10 @@
 
 Servo sort, discharge, stop, feeder;
 
-#define sortPin 44
+#define sortPin 40
 #define dischargePin 45
-#define stopPin 46
-#define feedPin 47
+#define stopPin 44
+#define feedPin 41
 
 void initServo() {
   sort.attach(sortPin);
@@ -24,6 +24,7 @@ void initServo() {
 }
 
 void servoStop() {
+  Serial.println("Activate Servo stop");
   stop.write(180);
 }
 void resetStop(){
@@ -31,6 +32,7 @@ void resetStop(){
 }
 
 void feederON() {
+  Serial.println("Activate feeder on");
   feeder.write(120);
 }
 void feederOFF() {
@@ -38,12 +40,14 @@ void feederOFF() {
 }
 
 void servoDischarge() {
+  Serial.println("I will discharge");
   discharge.write(180);
 }
 void resetDischarge() {
    discharge.write(90);
 }
 void servoSorting(int angle) {
+  Serial.println("I wass call to sort servo!");
   sort.write(angle);
 }
 void resetSorting() {
@@ -55,4 +59,3 @@ void servoReset() {
   discharge.write(90);
   stop.write(90);
 }
-
