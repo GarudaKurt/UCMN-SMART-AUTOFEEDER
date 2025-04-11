@@ -16,8 +16,7 @@ unsigned long prevTime3 = 0;
 unsigned long conveyorStartTime = 0;
 bool conveyorRunning = false;
 
-int speedA = 255; // Adjust speed (0-255)
-int speedB = 50;
+int speedB = 255;
 
 #define activateConveyor 120000
 
@@ -44,7 +43,7 @@ void conveyorForward_Manure() {
 
 // Reverse every 5 seconds (for manure)
 void conveyorReverse_Manure() {
-  if (millis() - prevTime2 >= 5000) {
+  if (millis() - prevTime2 >= 10000) {
     prevTime2 = millis();
     Serial.println("Manure Conveyor Reverse");
     digitalWrite(IN3, LOW);
@@ -63,17 +62,16 @@ void conveyorForward_Collect() {
     analogWrite(ENA, speedA);
   }
 }
-
+*/
 // Stop the conveyor **only after a full run cycle**
 void conveyorStop() {
-  if (millis() - conveyorStartTime >= 40000) {  // Stops after 10 seconds
+  if (millis() - conveyorStartTime >= 60000) {  // Stops after 10 seconds
     Serial.println("I will stop!");
-    analogWrite(ENA, 0);
     analogWrite(ENB, 0);
     conveyorRunning = false;  // Reset state
   }
 }
-*/
+
 
 // Master function to control the conveyor
 void runConveyor() {
@@ -85,7 +83,7 @@ void runConveyor() {
 
   // Run conveyor functions
   conveyorForward_Manure();
-  conveyorReverse_Manure();
+  // conveyorReverse_Manure();
   //conveyorForward_Collect();
- // conveyorStop();
+  conveyorStop();
 }
