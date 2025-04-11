@@ -1,8 +1,8 @@
 #include "weightObject.h"
 #include "HX711.h"
 
-#define DT_PIN 23
-#define SCK_PIN 22
+#define DT_PIN 3
+#define SCK_PIN 4
 
 float calibration_factor = -7050;  
 
