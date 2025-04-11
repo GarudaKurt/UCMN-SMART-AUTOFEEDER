@@ -1,6 +1,5 @@
 #include "timer.h"
 #include "conveyorControl.h"
-#include "controlMotor.h"
 #include "myservo.h"
 #include <RTClib.h>
 #include <Arduino.h>
@@ -8,13 +7,12 @@
 RTC_DS1307 rtc;
 
 #define relay_lightsUV 10
-#define relay_lightsLamp 11
 #define relay_water 12
 
 bool conveyorActive = false;
 bool uvLightActive = false;
 bool waterActive = false;
-
+int currentMinutes = 0;
 unsigned long uvStartTime = 0;
 unsigned long waterStartTime = 0;
 
@@ -30,16 +28,13 @@ void initTimer() {
     while (1);
   }
   pinMode(relay_lightsUV, OUTPUT);
-  pinMode(relay_lightsLamp, OUTPUT);
   pinMode(relay_water, OUTPUT);
 
   digitalWrite(relay_lightsUV, HIGH);
-  digitalWrite(relay_lightsLamp, HIGH);
   digitalWrite(relay_water, HIGH);
+
 }
 
-static void lampON() { digitalWrite(relay_lightsLamp, LOW); }
-static void lampOFF() { digitalWrite(relay_lightsLamp, HIGH); }
 static void uvlightON() { digitalWrite(relay_lightsUV, LOW); }
 static void uvlightOFF() { digitalWrite(relay_lightsUV, HIGH); }
 static void waterON() { digitalWrite(relay_water, LOW); }
@@ -55,7 +50,7 @@ const char* getCurrentTime() {
   static unsigned long waterStartTime = 0;
 
   DateTime now = rtc.now();
-  int currentMinutes = now.minute();
+  currentMinutes = now.minute();
   int currentSeconds = now.second();
   unsigned long currentMillis = millis();
 
@@ -67,15 +62,14 @@ const char* getCurrentTime() {
   // UV Light Control
   if (!uvLightActive && (currentMillis - uvStartTime >= uvCycleInterval)) {
     Serial.println("Turning UV Light ON.");
-    uvlightON();
-    lampON();
+    uvlightON();    
     uvLightActive = true;
     uvStartTime = currentMillis;
   }
   if (uvLightActive && (currentMillis - uvStartTime >= uvRunDuration)) {
     Serial.println("Turning UV Light OFF.");
     uvlightOFF();
-    lampOFF();
+    conveyorStop();
     uvLightActive = false;
   }
 
@@ -97,16 +91,23 @@ const char* getCurrentTime() {
   // Conveyor Control
   if (currentMinutes % 2 == 0 && currentMinutes != lastExecutedMinute) {
     Serial.println("Run conveyor!");
-    runStepperConveyor();  // This will manage the motor timing
+      runConveyor();
+    //isRunning = true;
+    // runConveyor();
+    
     lastExecutedMinute = currentMinutes;
   }
   if (isConveyorRunning && (currentMillis - conveyorStartTime >= conveyorRunDuration)) {
     Serial.println("Stopping conveyor.");
-    //conveyorStop();
-    conveyorStop_Stepper();
+    //conveyorStop_Stepper();
+    //isRunning = false;
     isConveyorRunning = false;
   }
 
   sprintf(timeStr, "%02d:%02d", currentMinutes, currentSeconds);
   return timeStr;
+}
+
+int getMins() {
+  return currentMinutes;
 }
